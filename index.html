@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>强-金 · iOS App 作品集</title>
+  <meta name="description" content="强-金 iOS 开发者作品集，展示全部上线 App，支持一键跳转 App Store 下载。" />
+  <link rel="preconnect" href="https://is3-ssl.mzstatic.com" />
+  <style>
+    :root {
+      --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #111827 100%);
+      --card: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-strong: #0ea5e9;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 20px 48px;
+      letter-spacing: 0.2px;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .hero {
+      padding: 26px;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+    .hero p { color: var(--muted); line-height: 1.6; }
+    .hero-actions { margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .btn:hover { border-color: rgba(56, 189, 248, 0.6); transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%); color: #0b1220; border: none; box-shadow: 0 12px 28px rgba(56, 189, 248, 0.35); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+    .stat {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stat .label { color: var(--muted); font-size: 13px; }
+    .stat .value { font-size: 20px; font-weight: 700; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .card { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .app-header { display: flex; gap: 12px; align-items: center; }
+    .app-icon { width: 64px; height: 64px; border-radius: 14px; border: 1px solid var(--border); object-fit: cover; background: rgba(255,255,255,0.08); }
+    .app-title { font-weight: 700; font-size: 16px; }
+    .badge { padding: 4px 8px; border-radius: 999px; background: rgba(56, 189, 248, 0.12); color: #8bd9ff; font-size: 12px; border: 1px solid rgba(56, 189, 248, 0.35); }
+    .desc { color: var(--muted); line-height: 1.5; font-size: 14px; }
+    .meta { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 12px; }
+    .meta span { display: inline-flex; align-items: center; gap: 4px; }
+    .preview-imgs { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+    .preview-imgs img { width: 100%; border-radius: 10px; border: 1px solid var(--border); object-fit: cover; aspect-ratio: 3/5; background: rgba(255,255,255,0.05); }
+    .card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pill { padding: 6px 10px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+    .list-header { display: flex; justify-content: space-between; align-items: center; padding: 0 6px; }
+    .search-box { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--border); }
+    .search-box input { background: transparent; border: none; outline: none; color: var(--text); width: 180px; }
+    .footer { text-align: center; color: var(--muted); font-size: 13px; padding: 12px; }
+    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero glass">
+      <div>
+        <p class="badge">iOS 独立开发者 · 强-金</p>
+        <h1>App 作品集与下载入口</h1>
+        <div class="hero-actions">
+          <a class="btn btn-primary" id="developerLink" target="_blank" rel="noreferrer">前往 App Store 开发者页</a>
+        </div>
+        <div class="hero-actions stats" style="margin-top:16px;">
+          <div class="stat"><span class="label">上架 App 数</span><span class="value" id="statCount">-</span></div>
+          <div class="stat"><span class="label">平均评分</span><span class="value" id="statRating">-</span></div>
+          <div class="stat"><span class="label">累计评分数</span><span class="value" id="statRatingCount">-</span></div>
+          <div class="stat"><span class="label">最新版本时间</span><span class="value" id="statRecent">-</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="glass" style="padding:18px; display:flex; flex-direction:column; gap:16px;">
+      <div class="list-header">
+        <h2 style="font-size:18px; font-weight:800;">全部 App</h2>
+        <div class="search-box">
+          <span style="color:var(--muted);">🔍</span>
+          <input id="searchInput" type="text" placeholder="搜索名称、类别、关键词" />
+        </div>
+      </div>
+      <div id="appsGrid" class="grid"></div>
+      <div id="emptyState" style="display:none; text-align:center; color:var(--muted); padding:20px;">未找到匹配的 App</div>
+    </section>
+
+    <p class="footer">© <span id="year"></span> 强-金 · iOS 开发者</p>
+  </div>
+
+  <script>
+    const developerId = '595674769';
+    const featuredAppId = '595674666'; // 提供的链接
+    const developerUrl = 'https://apps.apple.com/cn/developer/%E5%BC%BA-%E9%87%91/id595674769';
+
+    const state = { apps: [], loading: false, error: null, query: '' };
+    const els = {
+      grid: document.getElementById('appsGrid'),
+      empty: document.getElementById('emptyState'),
+      search: document.getElementById('searchInput'),
+      year: document.getElementById('year'),
+      statCount: document.getElementById('statCount'),
+      statRating: document.getElementById('statRating'),
+      statRatingCount: document.getElementById('statRatingCount'),
+      statRecent: document.getElementById('statRecent'),
+      developerLink: document.getElementById('developerLink')
+    };
+
+    els.year.textContent = new Date().getFullYear();
+    els.developerLink.href = developerUrl;
+
+    function formatPrice(price, currency) {
+      if (price === 0) return '免费';
+      const symbol = currency === 'CNY' ? '¥' : '';
+      return `${symbol}${price}`;
+    }
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      if (!dateStr || isNaN(d)) return '-';
+      return d.toLocaleDateString('zh-CN');
+    }
+
+    function calcStats(apps) {
+      if (!apps.length) return { count: 0, avg: '-', total: '-', recent: '-' };
+      const count = apps.length;
+      const rated = apps.filter(a => a.averageUserRating && a.userRatingCount);
+      const avg = rated.length ? (rated.reduce((s, a) => s + a.averageUserRating, 0) / rated.length).toFixed(1) : '-';
+      const total = rated.reduce((s, a) => s + a.userRatingCount, 0);
+      const recentDate = apps.map(a => a.currentVersionReleaseDate || a.releaseDate).filter(Boolean).sort((a, b) => new Date(b) - new Date(a))[0];
+      return { count, avg, total: total ? total.toLocaleString('zh-CN') : '-', recent: formatDate(recentDate) };
+    }
+
+    function render(apps) {
+      els.grid.innerHTML = '';
+      if (!apps.length) {
+        els.empty.style.display = 'block';
+        return;
+      }
+      els.empty.style.display = 'none';
+      apps.forEach(app => {
+        const card = document.createElement('article');
+        card.className = 'card glass';
+        const screenshots = app.screenshotUrls?.slice(0, 3) || [];
+        const priceLabel = formatPrice(app.price, app.currency);
+        const rating = app.averageUserRating ? `${app.averageUserRating.toFixed(1)} ★ (${(app.userRatingCount || 0).toLocaleString('zh-CN')})` : '暂无评分';
+        const genres = [app.primaryGenreName, ...(app.genres || []).slice(1)].filter(Boolean).slice(0, 3).join(' · ');
+        card.innerHTML = `
+          <div class="app-header">
+            <img class="app-icon" src="${app.artworkUrl100}" alt="${app.trackName}" loading="lazy" />
+            <div style="flex:1;">
+              <div class="app-title">${app.trackName}</div>
+              <div class="meta" style="margin-top:4px;">
+                <span>⭐ ${rating}</span>
+                <span>💰 ${priceLabel}</span>
+                <span>📂 ${genres || 'App'}</span>
+              </div>
+            </div>
+            <span class="badge">${app.version ? 'v' + app.version : 'App'}</span>
+          </div>
+          <p class="desc">${app.description ? app.description.slice(0, 120) + (app.description.length > 120 ? '…' : '') : '丰富的应用体验，点击查看详情。'}</p>
+          <div class="meta">
+            <span>📅 上架：${formatDate(app.releaseDate)}</span>
+            <span>⏱️ 更新：${formatDate(app.currentVersionReleaseDate)}</span>
+            ${app.fileSizeBytes ? `<span>📦 体积：${(app.fileSizeBytes/1024/1024).toFixed(1)} MB</span>` : ''}
+            ${app.contentAdvisoryRating ? `<span>⚖️ 分级：${app.contentAdvisoryRating}</span>` : ''}
+          </div>
+          ${screenshots.length ? `<div class="preview-imgs">${screenshots.map(url => `<img src="${url}" alt="${app.trackName} 截图" loading="lazy" />`).join('')}</div>` : ''}
+          <div class="card-actions">
+            <a class="btn btn-primary" href="${app.trackViewUrl}" target="_blank" rel="noreferrer">App Store 下载</a>
+            <button class="btn" onclick="navigator.clipboard.writeText('${app.trackViewUrl}').then(()=>{this.textContent='已复制'; setTimeout(()=>this.textContent='复制链接',1600);})">复制链接</button>
+            <span class="pill">开发者：${app.artistName}</span>
+          </div>
+        `;
+        els.grid.appendChild(card);
+      });
+    }
+
+    function applyFilter() {
+      const q = state.query.toLowerCase();
+      const apps = state.apps.filter(app => {
+        const hay = [app.trackName, app.description, app.primaryGenreName, (app.genres||[]).join(' ')].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+      render(apps);
+    }
+
+    async function fetchApps() {
+      state.loading = true;
+      try {
+        const res = await fetch(`https://itunes.apple.com/lookup?id=${developerId}&entity=software&country=cn`);
+        const data = await res.json();
+        const apps = (data.results || []).filter(item => item.kind === 'software');
+        // 确保提供的单 app 也在列表
+        const single = await fetchSingle(featuredAppId);
+        const merged = mergeApps(apps, single ? [single] : []);
+        state.apps = merged.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+        const stats = calcStats(state.apps);
+        els.statCount.textContent = stats.count;
+        els.statRating.textContent = stats.avg;
+        els.statRatingCount.textContent = stats.total;
+        els.statRecent.textContent = stats.recent;
+        applyFilter();
+      } catch (err) {
+        console.error(err);
+        state.apps = [];
+        render([]);
+      } finally {
+        state.loading = false;
+      }
+    }
+
+    async function fetchSingle(appId) {
+      try {
+        const res = await fetch(`https://itunes.apple.com/lookup?id=${appId}&country=cn`);
+        const data = await res.json();
+        return data.results?.find(r => r.kind === 'software');
+      } catch (e) {
+        console.warn('单 App 获取失败', e);
+        return null;
+      }
+    }
+
+    function mergeApps(apps, extra) {
+      const map = new Map();
+      [...apps, ...extra].forEach(app => { if (app && app.trackId) map.set(app.trackId, app); });
+      return Array.from(map.values());
+    }
+
+    els.search.addEventListener('input', (e) => { state.query = e.target.value.trim(); applyFilter(); });
+
+    // init
+    fetchApps();
+  </script>
+</body>
+</html>
