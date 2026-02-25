@@ -91,6 +91,15 @@
     .search-box { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid var(--border); }
     .search-box input { background: transparent; border: none; outline: none; color: var(--text); width: 180px; }
     .footer { text-align: center; color: var(--muted); font-size: 13px; padding: 12px; }
+    .alert {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      background: rgba(248, 113, 113, 0.08);
+      color: #fecdd3;
+      font-size: 13px;
+      line-height: 1.4;
+    }
     @media (max-width: 900px) { .hero { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -109,6 +118,7 @@
           <div class="stat"><span class="label">累计评分数</span><span class="value" id="statRatingCount">-</span></div>
           <div class="stat"><span class="label">最新版本时间</span><span class="value" id="statRecent">-</span></div>
         </div>
+        <div id="errorBanner" class="alert" style="display:none; margin-top:12px;"></div>
       </div>
     </section>
 
@@ -132,6 +142,31 @@
     const featuredAppId = '595674666'; // 提供的链接
     const developerUrl = 'https://apps.apple.com/cn/developer/%E5%BC%BA-%E9%87%91/id595674769';
 
+    const fallbackApps = [
+      {
+        trackId: 595674666,
+        trackName: '仙侠防御',
+        trackViewUrl: 'https://apps.apple.com/cn/app/%E4%BB%99%E4%BE%A0%E9%98%B2%E5%BE%A1/id595674666',
+        artworkUrl100: 'https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=200&q=80',
+        description: '仙侠塔防主题，布阵策略、多样关卡挑战。',
+        primaryGenreName: '游戏',
+        genres: ['游戏', '策略'],
+        price: 0,
+        currency: 'CNY',
+        averageUserRating: null,
+        userRatingCount: 0,
+        releaseDate: '2013-02-07T00:00:00Z',
+        currentVersionReleaseDate: '2013-02-07T00:00:00Z',
+        version: '1.0',
+        fileSizeBytes: null,
+        contentAdvisoryRating: '9+',
+        screenshotUrls: [
+          'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=600&q=80',
+          'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=600&q=80'
+        ]
+      }
+    ];
+
     const state = { apps: [], loading: false, error: null, query: '' };
     const els = {
       grid: document.getElementById('appsGrid'),
@@ -142,7 +177,8 @@
       statRating: document.getElementById('statRating'),
       statRatingCount: document.getElementById('statRatingCount'),
       statRecent: document.getElementById('statRecent'),
-      developerLink: document.getElementById('developerLink')
+      developerLink: document.getElementById('developerLink'),
+      errorBanner: document.getElementById('errorBanner')
     };
 
     els.year.textContent = new Date().getFullYear();
@@ -226,11 +262,11 @@
 
     async function fetchApps() {
       state.loading = true;
+      els.errorBanner.style.display = 'none';
       try {
         const res = await fetch(`https://itunes.apple.com/lookup?id=${developerId}&entity=software&country=cn`);
         const data = await res.json();
         const apps = (data.results || []).filter(item => item.kind === 'software');
-        // 确保提供的单 app 也在列表
         const single = await fetchSingle(featuredAppId);
         const merged = mergeApps(apps, single ? [single] : []);
         state.apps = merged.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
@@ -242,8 +278,15 @@
         applyFilter();
       } catch (err) {
         console.error(err);
-        state.apps = [];
-        render([]);
+        state.apps = fallbackApps;
+        const stats = calcStats(state.apps);
+        els.statCount.textContent = stats.count;
+        els.statRating.textContent = stats.avg;
+        els.statRatingCount.textContent = stats.total;
+        els.statRecent.textContent = stats.recent;
+        els.errorBanner.textContent = '实时拉取 App Store 接口失败，已显示示例数据。可能原因：GitHub Pages 跨域/网络被拦截或苹果接口访问受限。';
+        els.errorBanner.style.display = 'block';
+        applyFilter();
       } finally {
         state.loading = false;
       }
